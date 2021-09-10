@@ -9,33 +9,32 @@ class MongoDBCollection implements IMongoDBCollection {
 	) {}
 
 	public async createOne(dataToInsert: unknown): Promise<unknown> {
-		// return await this.collection.insertOne(dataToInsert);
-
 		return await this.httpJsonClient.post(this.collectionUrl, dataToInsert).toPromise();
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public async read(criteria = {}): Promise<unknown[]> {
 		// const cursor = this.collection.find(criteria);
 		//
 		// return await cursor.toArray();
-		throw new Error('MongoDBCollection.()');
+		// throw new Error('MongoDBCollection.()');
+
+		return (await this.httpJsonClient
+			.post(`${this.collectionUrl}/find`, criteria)
+			.toPromise()) as unknown[];
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public async readOneById(id: string): Promise<unknown> {
 		// return this.collection.findOne(critter(id));
-		throw new Error('MongoDBCollection.()');
+		// throw new Error('MongoDBCollection.()');
+
+		return await this.httpJsonClient.get(`${this.collectionUrl}/${id}`).toPromise();
 	}
 
 	public async readAll(): Promise<unknown[]> {
-		// return this.read({});
-
 		return (await this.httpJsonClient.get(this.collectionUrl).toPromise()) as unknown[];
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public updateOneById(id: string, replacementData: unknown): Promise<unknown> {
+	public async updateOneById(id: string, replacementData: unknown): Promise<unknown> {
 		// options: { safe?: any; remove?: boolean; upsert?: boolean; new?: boolean },
 
 		// findOneAndReplace: Analogous to HTTP PUT?
@@ -59,11 +58,14 @@ class MongoDBCollection implements IMongoDBCollection {
 		//
 		// 		return Promise.reject(error);
 		// 	}); */
-		throw new Error('MongoDBCollection.updateOneById()');
+		// throw new Error('MongoDBCollection.updateOneById()');
+
+		return await this.httpJsonClient
+			.put(`${this.collectionUrl}/${id}`, replacementData)
+			.toPromise();
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public deleteOneById(id: string): Promise<boolean> {
+	public async deleteOneById(id: string): Promise<boolean> {
 		// findOneAndDelete(filter: Filter<TSchema>): Promise<ModifyResult<TSchema>>;
 
 		// return this.collection
@@ -84,10 +86,16 @@ class MongoDBCollection implements IMongoDBCollection {
 		//
 		// 		return Promise.reject(error);
 		// 	});
-		throw new Error('MongoDBCollection.deleteOneById()');
+		// throw new Error('MongoDBCollection.deleteOneById()');
+
+		return await this.httpJsonClient
+			.delete(`${this.collectionUrl}/${id}`)
+			.toPromise()
+			.then((result: unknown) => Promise.resolve(typeof result !== 'undefined'));
+		// .catch((error: unknown) => Promise.resolve(false))
 	}
 
-	public deleteAll(): Promise<boolean> {
+	public async deleteAll(): Promise<boolean> {
 		// return (
 		// 	this.collection
 		// 		.drop()
@@ -103,7 +111,13 @@ class MongoDBCollection implements IMongoDBCollection {
 		// 			}
 		// 		})
 		// );
-		throw new Error('MongoDBCollection.deleteAll()');
+		// throw new Error('MongoDBCollection.deleteAll()');
+
+		return await this.httpJsonClient
+			.delete(this.collectionUrl)
+			.toPromise()
+			.then((result: unknown) => Promise.resolve(typeof result !== 'undefined'));
+		// .catch((error: unknown) => Promise.resolve(false))
 	}
 }
 
