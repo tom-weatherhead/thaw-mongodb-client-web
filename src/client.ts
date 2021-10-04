@@ -37,11 +37,10 @@ export function createWebMongoDBClient(
 ): IMongoDBClient {
 	const isHttps = ifDefinedThenElse(options.https, true);
 	const protocol = isHttps ? 'https' : 'http';
+	const server = ifDefinedThenElse(options.server, 'localhost');
 	const defaultPort = isHttps ? 443 : 80;
-	const serverUrl = `${protocol}://${ifDefinedThenElse(
-		options.server,
-		'localhost'
-	)}:${ifDefinedThenElse(options.port, defaultPort)}`;
+	const port = ifDefinedThenElse(options.port, defaultPort);
+	const serverUrl = `${protocol}://${server}:${port}`;
 
 	return new MongoDBClient(httpJsonClient, serverUrl);
 }

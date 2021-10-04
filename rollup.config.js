@@ -3,8 +3,8 @@
 /**
  * Copyright (c) Tom Weatherhead. All Rights Reserved.
  *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * This source code is licensed under the MIT license found in
+ * the LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -16,12 +16,14 @@ export default {
 	input: './dist/lib/main.js',
 	output: [
 		{
+			// Create a CommonJS version for Node.js
 			file: 'dist/thaw-mongodb-client-web.cjs.js',
 			format: 'cjs',
 			exports: 'named' // ,
 			// globals: { mongodb: 'mongodb' }
 		},
 		{
+			// Create an ESModule version
 			file: 'dist/thaw-mongodb-client-web.esm.js',
 			format: 'es',
 			esModule: true,
@@ -30,6 +32,7 @@ export default {
 			plugins: [terser()]
 		},
 		{
+			// Create a version that can run in Web browsers
 			file: 'dist/thaw-mongodb-client-web.js',
 			name: 'thaw-mongodb-client-web',
 			format: 'umd',
