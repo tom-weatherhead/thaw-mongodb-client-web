@@ -26,10 +26,18 @@ class MongoDBCollection implements IMongoDBCollection {
 		return (await this.httpJsonClient.get(this.collectionUrl).toPromise()) as unknown[];
 	}
 
-	public async updateOneById(id: string, replacementData: unknown): Promise<unknown> {
+	// public async headOneById(id: string): Promise<unknown> {
+	// 	return await this.httpJsonClient.head(`${this.collectionUrl}/${id}`).toPromise();
+	// }
+
+	public async replaceOneById(id: string, replacementData: unknown): Promise<unknown> {
 		return await this.httpJsonClient
 			.put(`${this.collectionUrl}/${id}`, replacementData)
 			.toPromise();
+	}
+
+	public async updateOneById(id: string, update: unknown): Promise<unknown> {
+		return await this.httpJsonClient.patch(`${this.collectionUrl}/${id}`, update).toPromise();
 	}
 
 	public async deleteOneById(id: string): Promise<boolean> {
